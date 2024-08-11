@@ -9,15 +9,18 @@ const productsSchema = new mongoose.Schema({
     },
     price:{
         type: Number,
+        require: true,
     },
     isStock:{
-        type: boolean,
+        type: Boolean,
+        require: true,
     },
     quantity:{
         type: Number,
-        default: 0,
+        default: 1,
     },
 
 },{timestamps: true});
 
-module.exports  = mongoose.model('Product', productsSchema);
+const poroduct =  mongoose.model('Product', productsSchema);
+module.exports = poroduct;

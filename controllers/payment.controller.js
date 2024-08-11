@@ -1,9 +1,10 @@
 const Razorpay = require('razorpay');
 require('dotenv').config();
+const {paymentServices} = require('../services');
 
 const {instance} = require('../server.js')
 
-export const createOrder = async (req,res) => {
+module.exports.createOrder = async (req,res) => {
     try{
         const options = {
             amount: req.body.amount,
@@ -29,11 +30,11 @@ export const createOrder = async (req,res) => {
     };
 };
 
-export const paymentById = async (req,res) => {
+module.exports.paymentById = async (req,res) => {
     const {paymentId} = req.params;
     const razorpay = new Razorpay({
         key_id: process.env.RAZORPAY_API_KEY,
-        key_secret: process.env.RAZORPAY_API_SECRET
+        key_secret: process.env.RAZORPAY_API_SECRET,
     });
     try{
         const payment = await razorpay.payments.fetch(paymentId);
@@ -53,4 +54,22 @@ export const paymentById = async (req,res) => {
     }catch(err){
         res.status(500).json({Message: "failed to fetch payment detais"});
     }
+}
+
+module.exports.createPayment = async (req,res) => {
+    const payment = await paymentServices.createPayment(req,res);
+    res.status(200).json({
+        Message: "Created",
+        success: "true",
+        Payment: payment,
+    });
+}
+
+module.exports.verifyPayment = async (req,res) => {
+    const verifyResult = await paymentServices.verifyPayment(req,res);
+    res.status(200).json({
+        Message: "Verify",
+        Success: "true",
+        Data: verifyResult,
+    });
 }

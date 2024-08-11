@@ -6,7 +6,7 @@ module.exports.createProducts = async (req,res) => {
     res.status(201).json({Message: "product create", success: "true", Data: product});
 }
 
-module.exports.getProducts = async () =>{
+module.exports.getProducts = async (req,res) =>{
     const products = await productsService.getAllProductService();
     res.status(200).json({Message: "product get.", success: "true",Data: products});
 }

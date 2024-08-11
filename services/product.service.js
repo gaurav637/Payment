@@ -1,19 +1,12 @@
-const {Product} = require('./models/product.model.js');
+const Product = require('../models/product.model.js');
 
-export const createProductsService = async (reqBody,res) => {
-    try{
+module.exports.createProductsService = async (reqBody,res) => {
         const product = new Product(reqBody);
+        product.save();
         return product;
-
-    }catch(err){
-        res.status(500).json({
-            Message: 'failed to create prodcuts!',
-            success: "false",
-        });
-    }
 }
 
-export const getAllProductService = async () =>{
+module.exports.getAllProductService = async () =>{
     const products = await Product.find();
     return products;
 }

@@ -1,18 +1,19 @@
 const express = require('express');
 require('dotenv').config();
-const paymentRouter = require('./routes/payment.router.js');
+const router = require('./routes');
 const Razorpay = require('razorpay')
-
+const database = require('./config/db.js');
+database();
 const app = express();
+app.use(express.json());
 app.get('/' , (req,res) => {
     res.send("hello server welcome to payment Integration");
 })
-app.use(bodyParser.json());
 const instance = new Razorpay({
     key_id: process.env.RAZORPAY_API_KEY,
     key_secret: process.env.RAZORPAY_API_SECRET,
 });
-app.use('api' , paymentRouter);
+app.use('/api' , router);
 
 
 const PORT = process.env.PORT||7070;

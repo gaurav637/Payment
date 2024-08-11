@@ -1,14 +1,15 @@
 const Razorpay = require('razorpay');
 require('dotenv').config();
-const {Product} = require('../models/product.model.js');
-const {Payment} = require('../models/payment.model.js');
+const Product = require('../models/product.model.js');
+const Payment = require('../models/payment.model.js');
 
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
+    key_id: process.env.RAZORPAY_API_KEY,
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-export const createOrder = async (req,res) => {
+
+module.exports.createOrder = async (req,res) => {
     try{
         const options = {
             amount: req.body.amount,
@@ -34,7 +35,7 @@ export const createOrder = async (req,res) => {
     };
 };
 
-export const paymentById = async (req,res) => {
+module.exports.paymentById = async (req,res) => {
     const {paymentId} = req.params;
     const razorpay = new Razorpay({
         key_id: process.env.RAZORPAY_API_KEY,
@@ -60,7 +61,7 @@ export const paymentById = async (req,res) => {
     }
 }
 
-export const createPayment = async (req, res) => {
+module.exports.createPayment = async (req, res) => {
     try {
         const { products, currency } = req.body;
 
@@ -74,11 +75,11 @@ export const createPayment = async (req, res) => {
                 return res.status(404).json({ message: `Product with ID ${item.productId} not found` });
             }
         }
-
+console.log("total ammount -> ",totalAmount);
         const options = {
             amount: totalAmount * 100, // amount in smallest currency unit
             currency: currency,
-            receipt: `order_rcptid_${Date.now()}`,
+            // receipt: `order_rcptid_${Date.now()}`,
         };
 
         const order = await razorpay.orders.create(options);
@@ -100,9 +101,7 @@ export const createPayment = async (req, res) => {
     }
 }
 
-
-
-export const verifyPayment =  async (req, res) => {
+module.exports.verifyPayment =  async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
